@@ -1,7 +1,99 @@
 
-#+TITLE: Using Policloud to Improve Teaching
+#+TITLE: Using the cloud to grade student assignments
 #+INCLUDE: ../../headers/modern.org
 
-* A few details on an ongoing experiment ..
+* A few details on an ongoing experiment 
+** Polimi@home's background:
+   - *Informatica B* (Introductory CS) for Mechanical, Energetic Engineers.
+   - *More than two hundred students* for each lab session (and counting).
+   - *Fewer and fewer resources dedicated* to lab each year (2 $\times$ Responsabili, 3 $\times$ Tutors).
+
+** Polimi@home's background
+   - Need for a *structured online environment* where students can practice at
+     home, in a *self-paced* manner.
+   - Sampling the current learning state of the class.
+   - Feedback on topics and methodologies for teaching (future).
+
+** Polimi@home - current features 
+   - It is an *EDX* instance (Cypress), hosted at *ASICT*.
+   - Integrated with *Shibbolet* for conventional authentication.
+   - Simple authoring process for lectures (a =YAML= file and Markdown) converted
+     into =XML= and imported.
+   - Remote execution of programming assignments (more on this later).
+
+* Polimi@home - demo
+
+** Polimi@home - future
+   - Serve complete course studies (1000s of students).
+   - Serve different programming languages.
+   - Base the evaluation of students partly on their measured performance.
+   - Making it easier to employ a flipped classroom model into a face-to-face class.
+
+* Architecture 
+** Remote execution
+
+#+BEGIN_LaTeX
+\begin{figure}
+\resizebox{.9\linewidth}{!}{\input{tikz/remote.tikz}}
+\end{figure}
+#+END_LaTeX
+   
+** Example request
+
+#+BEGIN_SRC js
+let xqueue_body = {
+        student_info: '782$81AB'
+        student_response: 'a = 0; a = a + 1',
+        grader_payload: gp
+};
+#+END_SRC
+
+   Payload contains assertions to be evaluated at the end of the execution
+
+#+BEGIN_SRC js
+let gp = {
+        lang: 'octave',
+        context: '',
+        validation: 'assert(a==1)'
+};
+#+END_SRC
+   
+** Security concerns
+
+   - Containerized process (*Docker*).
+   - Each assignment is run into its own (file system) *sandbox*. 
+   - A *timeout* is used to kill long running processes.
+
+** A primer on Docker      
+   - Lightweight runtime and packaging tool.
+   - Similar to a basic virtual machine, but with much less overhead.
+   - Guarantees that deployed apps run in identical environments.
+   - Provides versioned images.
+   
+
 * Summing up the experience so far
-* The future 
+** Positives 
+   - 267 students enrolled so far, service never broke once.
+   - Good responsiveness even if everything (EDX + Docker) is based on a virtual machine.
+   - Service offered at no cost (so far, ask me in a year).
+
+** Shortcomings 
+   - Only maintainable by ASICT staff. 
+   - *Long iteration times* for deploying updates to the micro-service --- forget about updating EDX.
+   - *Can't have feedback*. Ports are completely isolated (performance logs cannot be even transmitted over UDP). 
+   - Less than streamlined way to setup experimental services for students[fn:1].
+   - Summing up: less than perfect agility, limited insight and limited feedback.
+
+* A possible proposal for PoliCloud
+** How would I use PoliCloud 
+   - I'd move EDX and grading services into a virtual machine for which I have complete control OR
+   - I'd move at least the micro-service on PoliCloud premises.
+   - This would provide a faster way to:
+     - gather insight into students' performance and the system's performance.
+     - solve possible problems in (almost) realtime.
+     - experiment with different models (e.g., feedback on assignment).
+     
+* Footnotes
+
+[fn:1] More than a year passed since first meetings with METID/ASICT and first deploy.
+
