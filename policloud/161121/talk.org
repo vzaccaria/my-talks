@@ -1,6 +1,6 @@
 
 #+TITLE: Using the cloud to grade student assignments
-#+INCLUDE: ../../headers/modern.org
+#+INCLUDE: ../../headers/beamer_modern.org
 
 * A few details on an ongoing experiment 
 ** Polimi@home's background:
@@ -8,26 +8,26 @@
    - *More than two hundred students* for each lab session (and counting).
    - *Fewer and fewer resources dedicated* to lab each year (2 $\times$ Responsabili, 3 $\times$ Tutors).
 
-** Polimi@home's background
-   - Need for a *structured online environment* where students can practice at
-     home, in a *self-paced* manner.
-   - Sampling the current learning state of the class.
-   - Feedback on topics and methodologies for teaching (future).
+** Polimi@home's idea 
+   Provide an *alternative practice environment* where students can practice *at
+   home*, in a *self-paced* manner.
 
 ** Polimi@home - current features 
    - It is an *EDX* instance (Cypress), hosted at *ASICT*.
    - Integrated with *Shibbolet* for conventional authentication.
    - Simple authoring process for lectures (a =YAML= file and Markdown) converted
-     into =XML= and imported.
+     into =XML= and imported. *Easily collaborate with multiple teachers* through a
+     shared repository (Github).
    - Remote execution of programming assignments (more on this later).
 
 * Polimi@home - demo
 
 ** Polimi@home - future
-   - Serve complete course studies (1000s of students).
-   - Serve different programming languages.
-   - Base the evaluation of students partly on their measured performance.
-   - Making it easier to employ a flipped classroom model into a face-to-face class.
+   - Serve complete course studies (*1000s of students*).
+   - Provide intelligent feedback (sort of *advanced linting*).
+   - Base the *evaluation of students* partly on their measured performance.
+   - Making it easier to employ a *flipped classroom model* into a face-to-face class.
+   - *Real-time feedback on teaching* (future).
 
 * Architecture 
 ** Remote execution
@@ -65,29 +65,28 @@ let gp = {
    - A *timeout* is used to kill long running processes.
 
 ** A primer on Docker      
-   - Lightweight runtime and packaging tool.
-   - Similar to a basic virtual machine, but with much less overhead.
-   - Guarantees that deployed apps run in identical environments.
-   - Provides versioned images.
+   - Lightweight *runtime and packaging* tool.
+   - Similar to a *basic virtual machine (isolation)*, but with much less overhead.
+   - Guarantees that deployed apps run in *identical environments*.
+   - Provides *versioned images*.
    
 
 * Summing up the experience so far
-** Positives 
-   - 267 students enrolled so far, service never broke once.
+** Positive points
+   - *267 students enrolled so far*, service never broke once since beginning of October.
    - Good responsiveness even if everything (EDX + Docker) is based on a virtual machine.
-   - Service offered at no cost (so far, ask me in a year).
+   - Service offered at no cost 
 
-** Shortcomings 
-   - Only maintainable by ASICT staff. 
+** Current shortcomings 
+   - Only maintainable by ASICT staff. No streamlined way to setup experimental services for students[fn:1].
    - *Long iteration times* for deploying updates to the micro-service --- forget about updating EDX.
-   - *Can't have feedback*. Ports are completely isolated (performance logs cannot be even transmitted over UDP). 
-   - Less than streamlined way to setup experimental services for students[fn:1].
+   - *Can't have feedback*. Ports are completely isolated by policy (performance logs cannot be even transmitted over UDP). 
    - Summing up: less than perfect agility, limited insight and limited feedback.
 
 * A possible proposal for PoliCloud
 ** How would I use PoliCloud 
-   - I'd move EDX and grading services into a virtual machine for which I have complete control OR
-   - I'd move at least the micro-service on PoliCloud premises.
+   - I'd *move both EDX and grading services* into a virtual machine for which I have complete control OR
+   - I'd move *at least the micro-service* on PoliCloud premises.
    - This would provide a faster way to:
      - gather insight into students' performance and the system's performance.
      - solve possible problems in (almost) realtime.
