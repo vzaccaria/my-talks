@@ -2,6 +2,8 @@
 #+TITLE: Using the cloud to grade student assignments
 #+INCLUDE: ../../headers/beamer_modern.org
 
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+
 * A few details on an ongoing experiment 
 ** Polimi@home's background:
    - *Informatica B* (Introductory CS) for Mechanical, Energetic Engineers.
@@ -20,15 +22,34 @@
      shared repository (Github).
    - Remote execution of programming assignments (more on this later).
 
-* Polimi@home - demo
+** Demo
+   :PROPERTIES:
+   :BEAMER_opt: standout
+   :END:
+
+   file:./images/pah_vert.png
+
+** Demo
+   :PROPERTIES:
+   :BEAMER_opt: standout
+   :END:
+
+#+ATTR_LaTeX: :width 8cm
+   file:./images/pah_exeok.png
+
+** Demo
+   :PROPERTIES:
+   :BEAMER_opt: standout
+   :END:
+
+   file:./images/pah_progress.png
 
 ** Polimi@home - future
-   - Serve complete course studies (*1000s of students*).
+   - Scale to 1000s of students.
    - Provide intelligent feedback (sort of *advanced linting*).
    - Base the *evaluation of students* partly on their measured performance.
    - Making it easier to employ a *flipped classroom model* into a face-to-face class.
    - *Real-time feedback on teaching* (future).
-
 * Architecture 
 ** Remote execution
 
@@ -71,10 +92,11 @@ let gp = {
    - Provides *versioned images*.
    
 
+
 * Summing up the experience so far
 ** Positive points
    - *267 students enrolled so far*, service never broke once since beginning of October.
-   - Good responsiveness even if everything (EDX + Docker) is based on a virtual machine.
+   - Good responsiveness --- everything (EDX + Docker) is based on a virtual machine.
    - Service offered at no cost 
 
 ** Current shortcomings 
