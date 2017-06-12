@@ -1,0 +1,44 @@
+% Created 2016-11-18 Fri 09:25
+\documentclass[presentation]{beamer}
+\usetheme{default}
+\author{Vittorio Zaccaria}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={Vittorio Zaccaria},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 24.5.1 (Org mode 8.3.6)}, 
+ pdflang={English}}
+\begin{document}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\begin{tikzpicture}
+  \begin{pgfonlayer}{nodelayer}
+    \node [style=box] (0) at (0, 0) {EDX Server};
+    \node [style=box] (1) at (5, 0) {Grader};
+    \node [style=box] (2) at (-5, 0) {Browser};
+    \node [style=none] (3) at (-3, 2) {};
+    \node [style=none] (4) at (-3, -2.5) {};
+    \node [style=leftlabel] (5) at (-2.25, 2) {@Polimi};
+    \node [style=rightlabel] (6) at (-3.75, 2) {Home};
+    \node [style=descr] (7) at (0, -2.5) {Throttles requests through Xqueue};
+    \node [style=boxes] (8) at (5, -2.5) {Matlab};
+    \node [style=descr] (9) at (5, 2) {Currently limited to 1 job at a time};
+  \end{pgfonlayer}
+  \begin{pgfonlayer}{edgelayer}
+    \draw [style=arrow, in=-15, out=-165] (1) to node[style=arrowlabelbelow]{ok/ko} (0);
+    \draw [style=arrow, in=165, out=15] (0) to node[style=arrowlabelabove]{POST (code + payload)} (1);
+    \draw [style=arrow, bend left=15, looseness=1.25] (2) to node[style=arrowlabelabove]{POST code} (0);
+    \draw [style=arrow, bend left=15, looseness=1.25] (0) to node[style=arrowlabelbelow]{ok/ko} (2);
+    \draw [style=snake] (3.center) to (4.center);
+    \draw [style=descrconnect] (7) to (0);
+    \draw [style=doublearrow] (8) to (1);
+    \draw [style=descrconnect] (9) to (1);
+  \end{pgfonlayer}
+\end{tikzpicture}
+\end{document}

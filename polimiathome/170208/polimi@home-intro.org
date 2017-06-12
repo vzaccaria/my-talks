@@ -1,0 +1,108 @@
+
+#+TITLE: An experiment on Using EDX in regular classes 
+#+INCLUDE: beamer_modern.org
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+
+* A few details on an ongoing experiment 
+** Polimi@home's background:
+   - *Informatica B* (Introductory CS) for Mechanical, Energetic Engineers.
+   - *More than two hundred students* for each lab session (and counting).
+   - *Fewer and fewer resources dedicated* to lab each year (2 $\times$ Responsabili, 3 $\times$ Tutors).
+
+** Polimi@home's idea 
+   Provide an *alternative practice environment* where students can practice *at
+   home*, in a *self-paced* manner.
+
+** Polimi@home - current features 
+   - It is an *EDX* instance (Cypress), hosted at *ASICT*.
+   - Integrated with *Shibbolet* for conventional authentication.
+   - Simple authoring process for lectures (a =YAML= file and Markdown) converted
+     into =XML= and imported. *Easily collaborate with multiple teachers* through a
+     shared repository (Github).
+   - Remote execution of programming assignments (more on this later).
+
+** Demo
+   :PROPERTIES:
+   :BEAMER_opt: standout
+   :END:
+
+   file:./images/pah_vert.png
+
+** Demo
+   :PROPERTIES:
+   :BEAMER_opt: standout
+   :END:
+
+#+ATTR_LaTeX: :width 8cm
+   file:./images/pah_exeok.png
+
+** Demo
+   :PROPERTIES:
+   :BEAMER_opt: standout
+   :END:
+
+   file:./images/pah_progress.png
+
+** Polimi@home - future
+   - Scale to 1000s of students.
+   - Provide intelligent feedback (sort of *advanced linting*).
+   - Base the *evaluation of students* partly on their measured performance.
+   - Making it easier to employ a *flipped classroom model* into a face-to-face class.
+   - *Real-time feedback on teaching* (future).
+* Architecture                                                     :noexport:
+** Remote execution
+
+#+BEGIN_EXPORT latex
+\begin{figure}
+\resizebox{.9\linewidth}{!}{\input{tikz/remote.tikz}}
+\end{figure}
+#+END_EXPORT
+   
+** Example request
+
+#+BEGIN_SRC js
+let xqueue_body = {
+        student_info: '782$81AB'
+        student_response: 'a = 0; a = a + 1',
+        grader_payload: gp
+};
+#+END_SRC
+
+   Payload contains assertions to be evaluated at the end of the execution
+
+#+BEGIN_SRC js
+let gp = {
+        lang: 'octave',
+        context: '',
+        validation: 'assert(a==1)'
+};
+#+END_SRC
+   
+** Security concerns
+
+   - Containerized process (*Docker*).
+   - Each assignment is run into its own (file system) *sandbox*. 
+   - A *timeout* is used to kill long running processes.
+
+** A primer on Docker      
+   - Lightweight *runtime and packaging* tool.
+   - Similar to a *basic virtual machine (isolation)*, but with much less overhead.
+   - Guarantees that deployed apps run in *identical environments*.
+   - Provides *versioned images*.
+   
+* Summing up the experience so far
+** Positive points
+   - *267 students enrolled so far*, service never broke once since beginning of October.
+   - Good responsiveness --- everything (EDX + Docker) is based on a virtual machine.
+   - Service offered at no cost 
+
+** Current shortcomings                                            :noexport:
+   - Only maintainable by ASICT staff. No streamlined way to setup experimental services for students[fn:1].
+   - *Long iteration times* for deploying updates to the micro-service --- forget about updating EDX.
+   - *Can't have feedback*. Ports are completely isolated by policy (performance logs cannot be even transmitted over UDP). 
+   - Summing up: less than perfect agility, limited insight and limited feedback.
+
+* Footnotes
+
+[fn:1] More than a year passed since first meetings with METID/ASICT and first deploy.
+
