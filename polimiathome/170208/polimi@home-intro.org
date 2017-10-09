@@ -1,7 +1,9 @@
 
 #+TITLE: An experiment on Using EDX in regular classes 
-#+INCLUDE: beamer_modern.org
-#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+#+INCLUDE: ./org-headers/header_beamer.org
+
+#+COLUMNS: %40ITEM %20TAGS
+#+EXCLUDE_TAGS: tbd excluded noexport
 
 * A few details on an ongoing experiment 
 ** Polimi@home's background:
@@ -21,14 +23,14 @@
      shared repository (Github).
    - Remote execution of programming assignments (more on this later).
 
-** Demo
+** Demo                                                            :noexport:
    :PROPERTIES:
    :BEAMER_opt: standout
+   :BEAMER_EXTRA:
    :END:
-
    file:./images/pah_vert.png
 
-** Demo
+** Demo                                                            :noexport:
    :PROPERTIES:
    :BEAMER_opt: standout
    :END:
@@ -36,7 +38,7 @@
 #+ATTR_LaTeX: :width 8cm
    file:./images/pah_exeok.png
 
-** Demo
+** Demo                                                            :noexport:
    :PROPERTIES:
    :BEAMER_opt: standout
    :END:
@@ -49,7 +51,7 @@
    - Base the *evaluation of students* partly on their measured performance.
    - Making it easier to employ a *flipped classroom model* into a face-to-face class.
    - *Real-time feedback on teaching* (future).
-* Architecture                                                     :noexport:
+* Architecture
 ** Remote execution
 
 #+BEGIN_EXPORT latex
