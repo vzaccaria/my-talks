@@ -1,6 +1,7 @@
 
 #+TITLE: An experiment on Using EDX in regular classes 
-#+INCLUDE: ./org-headers/header_beamer.org
+#+INCLUDE: ./org-headers/header_beamer_notes.org
+
 
 #+COLUMNS: %40ITEM %20TAGS
 #+EXCLUDE_TAGS: tbd excluded noexport
@@ -93,6 +94,7 @@ let gp = {
    - Provides *versioned images*.
    
 * Summing up the experience so far
+
 ** Positive points
    - *267 students enrolled so far*, service never broke once since beginning of October.
    - Good responsiveness --- everything (EDX + Docker) is based on a virtual machine.
