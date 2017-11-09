@@ -1,6 +1,6 @@
 
 #+TITLE: An experiment on Using EDX in regular classes 
-#+INCLUDE: ./org-headers/header_beamer_notes.org
+#+INCLUDE: ./org-headers/header_beamer.org
 
 
 #+COLUMNS: %40ITEM %20TAGS
