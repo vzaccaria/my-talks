@@ -1,0 +1,264 @@
+#+STARTUP: showall indent latexpreview entitiespretty
+
+#+TITLE: A Haskell embedded DSL for Secure Hardware Design
+#+AUTHOR: in collaboration with Guido Bertoni, Filippo Melzani
+
+#+LATEX_HEADER: \providecommand{\clash}{C$\lambda$ash}
+#+LATEX_HEADER: \usetikzlibrary{arrows,chains,matrix,positioning,scopes}
+#+LATEX_HEADER: \newcommand{\concat}{\mathbin{{+}\mspace{-8mu}{+}}}
+
+#+LATEX_HEADER: \setmonofont[
+#+LATEX_HEADER:   Contextuals={Alternate}, Scale=0.7,
+#+LATEX_HEADER:   Scale=MatchLowercase % (LD.)
+#+LATEX_HEADER: ]{Fira Code}
+
+
+
+* Introduction
+** Context
+
+- Cryptographic circuits might expose vulnerability against *side channel
+  attacks*.
+
+- A typical side channel attack uses information leaked through power
+  consumption to derive sensitive data stored in the circuit.
+
+- A *countermeasure* is some additional circuitry that keeps this sensitive
+  information from leaking.
+
+** Problem
+
+The path from specification down to implementation is far from being fully automatic.
+
+** Goal
+
+investigate whether a single *domain specific language* (DSL) can, at the same
+time, help us *specifying and enforcing* the functionality of the circuit as
+well as its *protection against side-channel attacks*.
+
+* Methodology
+** CASCA = Countermeasure Against Side Channel Attacks
+
+#+BEGIN_EXPORT latex
+\begin{figure}
+\resizebox{7cm}{!}{
+\begin{tikzpicture}[->,>=stealth']
+    \matrix (m) [matrix of nodes, row sep=2em, column sep=3em,
+     ampersand replacement=\&,
+     nodes={draw, % General options for all nodes
+      line width=1pt, anchor=center, text centered, rounded corners, minimum
+      width=1.5cm, minimum height=8mm },
+    % Define styles for some special nodes
+    txt/.style={text width=2.2cm,anchor=center},
+    file/.style={txt,draw=black!20},
+    artifact/.style={txt,dashed,draw=black!20},
+    ellip/.style={ellipse,scale=0.5}, empty/.style={draw=none} ] {
+     \& \node (hl) [file] { \textsc{CASCA} DSL }; \& \\
+     \& \node (hc1) [txt] { Haskell compiler };                    \& \node (si) [txt] { \textsc{CASCA} semantic rules };  \\
+     \& \node (hc) [txt] { \textsc{CASCA} semantic interpreter };  \&  \\
+     \node (ma) [artifact] {Static Vulnerability Report}; \& \node (sp) [txt] { SMT solver };                    \& \node (cp) [txt] { \clash{} compiler}; \\
+     \& \node (zz) [artifact] { Correctness proofs };  \& \node (vh) [artifact] { RTL VHDL or Verilog }; \\
+    };
+    \draw[] (hl) edge (hc1);
+    \draw[] (si) edge (hc1);
+    \draw[] (hc1) edge (hc);
+    \draw[] (hc) edge (ma);
+    \draw[] (hc) edge (sp);
+    \draw[] (hc) edge (cp);
+    \draw[] (sp) edge (zz);
+    \draw[] (cp) edge (vh);
+\end{tikzpicture}
+}
+\end{figure}
+#+END_EXPORT
+
+Only combinatorial circuits are managed at the moment
+
+* CASCA eDSL
+** eDSL features
+
+The embedded DSL has been built using the *typed tagless final* approach.
+
+- *Typed*. The DSL has its own type system that enforces the semantic domain
+  constraints
+
+- *Tagless*. The semantic types are not implemented as tagged unions
+
+- *Final*. No intermediate structure such as intermediate ASTs
+
+** eDSL combinators
+
+#+BEGIN_EXPORT latex
+\begin{table}
+  \centering
+  \begin{tabular}{ll}
+    Combinator              & Description                                     \\ \hline
+    $\mathsf{literal} ~ x$  & Constant signal with value $x$.            \\
+    $ s \mathsf{~~op~~} t $ & Conventional bit-wise operators (op $= \wedge, \oplus$)                 \\
+    $ s \concat t$          & Signal bundle of $s$ and $t$ \\
+    $s ~\mathsf{!} ~ i$     & Extracts 1 bit at position $i$  from an $n$-width signal  \\
+  \end{tabular}
+  \caption{The list of combinators used in CASCA}
+  \label{tab:1}
+\end{table}
+#+END_EXPORT
+
+** eDSL example
+
+For example, let us consider a half adder which computes, from two single-bit
+signals, a tuple with their arithmetic sum along with the
+carry:
+
+#+BEGIN_EXPORT latex
+\begin{equation}
+\textrm{hAdder}: a \mapsto b \mapsto (a \oplus b, a \wedge b)
+\end{equation}
+#+END_EXPORT
+
+A well-typed definition in the CASCA DSL is the following:
+
+#+BEGIN_SRC haskell
+hAdder :: Symantics repr => repr 1 -> repr 1 -> (repr 1, repr 1)
+hAdder a b = (sum, carry)
+  where
+    sum   = a + b
+    carry = a * b
+#+END_SRC
+
+** Modularity
+
+In turn, we can use ~hAdder~ to build other hardware primitives
+
+#+BEGIN_SRC haskell
+-- Adder4.hs
+
+adder4 ::
+   (Symantics repr) => repr 4 -> repr 4 -> repr 1 -> (repr 4, repr 1)
+adder4 a b cin = (sum, co3)
+  where
+    (s0, co0) = fAdder (a!0) (b!0) cin
+    (s1, co1) = fAdder (a!1) (b!1) co0
+    (s2, co2) = fAdder (a!2) (b!2) co1
+    (s3, co3) = fAdder (a!3) (b!3) co2
+    sum = s3 ++ s2 ++ s1 ++ s0
+    fAdder a b cin = (sum, cout)
+    where
+      (s1, c1)  = hAdder a b
+      (sum, c2) = hAdder cin s1
+      cout = c1 + c2
+#+END_SRC
+
+* Semantic interpreters
+** Hardware generation
+
+We provide a concrete implementation for the combinators specified to use the
+\clash{} compiler
+
+#+BEGIN_SRC haskell
+instance Symantics HW where
+  literal         = HW . fromInteger
+  (HW a) * (HW b) = HW (a .&. b)
+  (HW a) + (HW b) = HW (a `xor` b)
+  neg (HW x)      = HW (complement x)
+  (HW x) ! i      = HW . unpack (x CLaSH.! i)
+  (HW v1) ++ (HW v2) = HW (unpack ((pack v1) ++# (pack v2)))
+#+END_SRC
+
+And generate Verilog/VHDL directly from, e.g., ~adder4~.
+
+#+BEGIN_SRC shell
+stack exec clash -- --verilog Adder4.hs
+#+END_SRC
+
+** Hardware generation
+
+file:./images/synthesis_results.pdf
+
+** Functional validation
+
+Remap combinators to use the SBV library and define predicates to verify:
+
+#+BEGIN_SRC haskell
+predicate :: Symbolic SBool
+predicate = do
+    a   <- forall "a"
+    b   <- forall "b"
+    cin <- forall "cin"
+    constrain (a .<= 0xf)
+    constrain (b .<= 0xf)
+    constrain (cin .== 0x0)
+    return (predicateAux a b cin)
+#+END_SRC
+
+where ~predicateAux~ compares ~adder4~ with SBV's adder spec.
+
+#+BEGIN_SRC haskell
+> prove predicate
+Q.E.D.
+#+END_SRC
+
+** Side channel validation
+
+For every intermediate value check if the corresponding expression tree contains
+a *xor* with one or more random masks. This can be implemented as an additional
+semantic interpreter that raises an exception when mask conditions are not met
+(note. this is not run-time!);
+
+#+BEGIN_EXPORT latex
+\begin{figure}[ht]
+\resizebox{10cm}{!}{
+  \begin{tikzpicture}[->,>=stealth', every label/.style={font=\tiny}]
+    \tikzstyle{block}     = [draw,rectangle,thick,minimum height=2em,minimum width=1cm,font=\tiny]
+    \tikzstyle{sum}       = [draw,circle,inner sep=0mm,minimum size=2mm]
+    \tikzstyle{connector} = [->,thick] \tikzstyle{line} = [thick]
+    \tikzstyle{branch}    = [circle,inner sep=0pt,minimum size=1mm,fill=black,draw=black]
+    \tikzstyle{descr}=[scale=.5, color=black!40]
+    \tikzstyle{descrconnect}=[->, thick,color=black!40]
+
+    % operand a
+
+    \node (a1) [block,label=above:$a_1$] at (0,2) {\{1,5\}};
+    \node      [block,label=above:$a_2$] at (1,2) {\{2\}};
+    \node      [block,label=above:$a_3$] at (2,2) {\{3,5\}};
+    \node (o1) [block,label=above:$a_4$] at (3,2) {\{4\}};
+
+    % operand b
+    \node      [block,label=above:$b_1$] at (0,0) {\{1\}};
+    \node      [block,label=above:$b_2$] at (1,0) {\{2\}};
+    \node      [block,label=above:$b_3$] at (2,0) {\{3\}};
+    \node (o2) [block,label=above:$b_4$] at (3,0) {\{4\}};
+
+    % result
+    \node (i1) [block,label=above:$c_1$] at (7,1) {\{5\}};
+    \node (c2) [block,label=above:$c_2$] at (8,1) {\{\}};
+    \node [block,label=above:$c_3$] at (9,1) {\{5,6\}};
+    \node (c4) [block,label=above:$c_4$] at (10,1) {\{\}};
+
+    % signal flow
+
+    \node [block] at (5,1) (s1) {sum};
+    \draw [connector] (o1) -- ($ (o1) + (1.5,0) $) -- (s1);
+    \draw [connector] (o2) -- ($ (o2) + (1.5,0) $) -- (s1);
+    \draw [connector] (s1) -- (i1);
+
+    % labels for operands and results
+
+    \node [descr] at (1.5,1.3)  {4-bit operand $a$};
+    \node [descr] at (1.5,-0.8) {4-bit operand $b$};
+    \node [descr] at (8.5,0.3)  {4-bit result $c: a \oplus b$};
+
+
+    % descriptions
+    \node (d1) [descr] at ($ (a1) + (-1,-1)$) {e.g, $a_1$ covered by masks 1 and 5};
+    \node (d2) [descr] at ($ (c2) + (1,1.5) $) {e.g, $c_2$ and $c_4$ not covered  by any mask, vulnerability found};
+    \draw [descrconnect] (d1) -- (a1);
+
+    \draw [descrconnect] (d2) -- (c4);
+    \draw [descrconnect] (d2) -- (c2);
+  \end{tikzpicture}
+}
+\caption{Example of mask set propagation.\label{fig:maskprop-ex}}
+\end{figure}
+#+END_EXPORT
+
+* Thanks!
