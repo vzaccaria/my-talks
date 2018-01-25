@@ -1,0 +1,61 @@
+#+STARTUP: showall indent latexpreview entitiespretty
+
+#+TITLE: DSLs in finance, an overview
+
+#+LATEX_HEADER: \providecommand{\clash}{C$\lambda$ash}
+#+LATEX_HEADER: \usetikzlibrary{arrows,chains,matrix,positioning,scopes}
+#+LATEX_HEADER: \newcommand{\concat}{\mathbin{{+}\mspace{-8mu}{+}}}
+
+#+LATEX_HEADER: \setmonofont[
+#+LATEX_HEADER:   Contextuals={Alternate}, Scale=0.7,
+#+LATEX_HEADER:   Scale=MatchLowercase % (LD.)
+#+LATEX_HEADER: ]{Fira Code}
+
+
+
+* Introduction
+* Contract languages
+** Certified symbolic management cite:Bahr:2015hm
+
+- Can describe stipulation between multiple parties (~&~ operator)
+
+- Can describe observable external decisions (~obs~)
+
+  #+BEGIN_src matlab
+  if obs(X exercises option, 0) within 90
+  then
+      100 × (USD(Y → X) & 6.5 × DKK(X → Y ))
+  else
+      0
+  end
+  #+END_src
+
+* Semantics
+** Certified symbolic management cite:Bahr:2015hm
+
+- Subdivides semantics into *contract* and *expression* semantics. It is
+  denotational (i.e., defines corresponding math objects recursively over the
+  syntax tree)
+
+- The semantics of a contract is given by its cash-flow trace (simplified) and
+  has type: $$ C: \Gamma \rightarrow N \rightarrow Party \times Party \times Asset \rightarrow R $$
+
+- Denotational semantics is giving by composing functions and constants, e.g.,
+
+  #+BEGIN_EXPORT latex
+  \begin{equation}
+  \begin{array}{rcl}
+  C[0] & = & \lambda n. \lambda t . 0\\
+  C[e \times c]  & = & E[e] * C[c] \\
+  C[c1 + c2] & = & C[c1] + C[c2] \\
+  \end{array}
+  \end{equation}
+  #+END_EXPORT
+
+
+* Software verification and certified software
+* Type systems
+* References
+** Papers
+bibliographystyle:unsrt
+bibliography:biblio.bib

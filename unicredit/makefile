@@ -1,9 +1,6 @@
 
-CURTGT?=hw_haskell.pdf
+CURTGT?=180116_dsls_frp.pdf
 CURORG=$(patsubst %.pdf, %.org, $(CURTGT))
-
-ORG2PDFOPTS=--latex-engine lualatex
-ORG2PDFOPTSSLIDES=$(ORG2PDFOPTS) --use-header-files ./org-headers/header_beamer.org --exclude-tags notes
 
 target: $(CURTGT)
 
@@ -15,7 +12,7 @@ watch-edit: $(CURTGT)
 	watchman $(CURORG) "make $(CURTGT)"
 
 %.pdf: %.org
-	org2pdf $*.org $(ORG2PDFOPTSSLIDES) --output $@
+	org2pdf $*.org -e lualatex -a ./org-headers/header_beamer.org --output $@ -k
 
 clean:
 	rm -rf pdf/*
