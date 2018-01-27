@@ -2,10 +2,6 @@
 
 #+TITLE: DSLs in finance, an overview
 
-#+LATEX_HEADER: \providecommand{\clash}{C$\lambda$ash}
-#+LATEX_HEADER: \usetikzlibrary{arrows,chains,matrix,positioning,scopes}
-#+LATEX_HEADER: \newcommand{\concat}{\mathbin{{+}\mspace{-8mu}{+}}}
-
 #+LATEX_HEADER: \setmonofont[
 #+LATEX_HEADER:   Contextuals={Alternate}, Scale=0.7,
 #+LATEX_HEADER:   Scale=MatchLowercase % (LD.)
