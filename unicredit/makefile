@@ -12,7 +12,7 @@ watch-edit: $(CURTGT)
 	watchman $(CURORG) "make $(CURTGT)"
 
 %.pdf: %.org
-	org2pdf $*.org -e xelatex -a ./org-headers/header_beamer_xelatex.org --output $@ -r
+	org2pdf $*.org -e xelatex -a ./org-headers/header_beamer_xelatex.org --output $@ -r -k
 
 clean:
 	rm -rf pdf/*
