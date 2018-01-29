@@ -1,3 +1,4 @@
+#+INCLUDE: /Users/zaccaria/development/github/org-institutional/my-talks/unicredit/org-headers/header_beamer_xelatex.org
 #+STARTUP: showall indent latexpreview entitiespretty
 
 #+TITLE: DSLs in finance, an overview
@@ -107,12 +108,8 @@ $i=16$, the contract can be transformed into:
 - Temporal logic is an extension of logic to include proofs that formulas are
   valid at particular times.
 
-- Inference rules are time-indexed and there is a new operator $\bigcirc A$ which stands for
+- Inference rules are indexed and there is a new operator $\bigcirc A$ which stands for
   the value of $A$ at the "next" (discrete) time:
-  $$\inference{\Gamma |-^{(n)} A \rightarrow B & \Gamma |-^{(n)} A}{\Gamma |-^{(n)} B}$$ or,
-  $$\inference{\Gamma |-^{(n)} \bigcirc A}{\Gamma |-^{(n+1)} A}$$
-
-
 
 
 

@@ -1,3 +1,4 @@
+#+INCLUDE: /Users/zaccaria/development/github/org-institutional/my-talks/unicredit/org-headers/header_beamer_xelatex.org
 #+STARTUP: showall indent latexpreview entitiespretty
 
 #+TITLE: DSLs in finance, an overview
@@ -38,15 +39,7 @@
 
   $$\ite{\describe{\observe{\event{X exercises option}}{0}}{eval'd at the beginning of each day}}{\describeu{90}{days' range}}{100*\describe{\assetexchange{DKK}{Y}{X}}{atomic exchange contract}}{0}$$
 
-** Findel cite:Biryukov:2017ip
-- Absolute times;
-
-- Syntax similar to others but no intuitive reference to parties involved as
-  contracts change over time:
-
-  $$\describe{Give(10 * One(USD))}{Bob pays 10 now} \wedge \describeu{At(now+1~years, 11 * One(USD))}{Bob expects to receive 11 in a year}$$
-
-
+** Findel
 
 
 * Semantics
@@ -101,21 +94,6 @@ $i=16$, the contract can be transformed into:
   available at some time $t'$ and $c$ makes no stipulations strictly before
   $t'$: $$\inference{\Gamma |- e: Real^{t'} & \Gamma |- c: Contr^{t'} & t \leq t'}{\Gamma |- e \times c:
   Contr^t}$$
-
-** Temporal logic cite:Davies:2017gk
-
-- Temporal logic is an extension of logic to include proofs that formulas are
-  valid at particular times.
-
-- Inference rules are time-indexed and there is a new operator $\bigcirc A$ which stands for
-  the value of $A$ at the "next" (discrete) time:
-  $$\inference{\Gamma |-^{(n)} A \rightarrow B & \Gamma |-^{(n)} A}{\Gamma |-^{(n)} B}$$ or,
-  $$\inference{\Gamma |-^{(n)} \bigcirc A}{\Gamma |-^{(n+1)} A}$$
-
-
-
-
-
 
 
 
