@@ -1,3 +1,4 @@
+#+INCLUDE: /Users/zaccaria/development/github/org-institutional/my-talks/unicredit/org-headers/header_beamer_xelatex.org
 #+STARTUP: showall indent latexpreview entitiespretty
 
 #+TITLE: DSLs in finance, an overview
@@ -118,11 +119,10 @@ behaviour of reactive programs.
 
 - LTL can be defined in a dependently typed functional language, and
   reactive programs form proofs of constructive LTL properties.
-  Types are *indexed* over time[fn:2]: $$RSet = Time \rightarrow \univ{0}, ~~ RSet \in \univ{1}$$
+  Types are *indexed* over time: $$RSet = Time \rightarrow \univ{0}, ~~ RSet \in \univ{1}$$
 
 
 - One of the inhabitant of $RSet$ is the function $Past$:
-
 
 
 
@@ -153,8 +153,6 @@ bibliographystyle:unsrt
 bibliography:biblio.bib
 
 * Footnotes
-
-[fn:2] we use $\univ{i}$ to represent the universe of types $i$.
 
 
 [fn:1] $\delta$ = Kronecker's delta

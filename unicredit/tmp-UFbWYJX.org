@@ -1,3 +1,4 @@
+#+INCLUDE: /Users/zaccaria/development/github/org-institutional/my-talks/unicredit/org-headers/header_beamer_xelatex.org
 #+STARTUP: showall indent latexpreview entitiespretty
 
 #+TITLE: DSLs in finance, an overview
@@ -22,9 +23,6 @@
 #+LATEX_HEADER: \newcommand{\assetexchange}[3]{\text{#1}(#2 \rightarrow #3)}
 #+LATEX_HEADER: \newcommand{\observe}[2]{\text{Obs}(#1,#2)}
 #+LATEX_HEADER: \newcommand{\event}[1]{\text{#1}}
-#+LATEX_HEADER: \newcommand{\tconst}[1]{\langle #1 \rangle}
-#+LATEX_HEADER: \newcommand{\talways}[1]{|[ #1 |]}
-#+LATEX_HEADER: \newcommand{\univ}[1]{\mathcal{U}_{#1}}
 #+LATEX_HEADER: \newcommand{\ite}[4]{\text{if}~{#1}~\text{in}~{#2}~\text{then}~{#3}~\text{else}~#4}
 
 
@@ -110,21 +108,6 @@ $i=16$, the contract can be transformed into:
 Most of the typing for financial DSLs is based on /functional reactive programming/, i.e.,
 pure functions over signals. This includes loops as well.
 
-Linear-time Temporal Logic (LTL) cite:Jeffrey:2012fh, cite:Pnueli:1977wy is a
-natural extension of the type system for FRP, which constrains the temporal
-behaviour of reactive programs.
-
-** Functional reactive programs
-
-- LTL can be defined in a dependently typed functional language, and
-  reactive programs form proofs of constructive LTL properties.
-  Types are *indexed* over time[fn:2]: $$RSet = Time \rightarrow \univ{0}, ~~ RSet \in \univ{1}$$
-
-
-- One of the inhabitant of $RSet$ is the function $Past$:
-
-
-
 
 
 
@@ -153,8 +136,6 @@ bibliographystyle:unsrt
 bibliography:biblio.bib
 
 * Footnotes
-
-[fn:2] we use $\univ{i}$ to represent the universe of types $i$.
 
 
 [fn:1] $\delta$ = Kronecker's delta

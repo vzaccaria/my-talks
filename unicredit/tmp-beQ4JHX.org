@@ -1,3 +1,4 @@
+#+INCLUDE: /Users/zaccaria/development/github/org-institutional/my-talks/unicredit/org-headers/header_beamer_xelatex.org
 #+STARTUP: showall indent latexpreview entitiespretty
 
 #+TITLE: DSLs in finance, an overview
@@ -24,7 +25,6 @@
 #+LATEX_HEADER: \newcommand{\event}[1]{\text{#1}}
 #+LATEX_HEADER: \newcommand{\tconst}[1]{\langle #1 \rangle}
 #+LATEX_HEADER: \newcommand{\talways}[1]{|[ #1 |]}
-#+LATEX_HEADER: \newcommand{\univ}[1]{\mathcal{U}_{#1}}
 #+LATEX_HEADER: \newcommand{\ite}[4]{\text{if}~{#1}~\text{in}~{#2}~\text{then}~{#3}~\text{else}~#4}
 
 
@@ -116,15 +116,14 @@ behaviour of reactive programs.
 
 ** Functional reactive programs
 
-- LTL can be defined in a dependently typed functional language, and
+- LTL can be defined in a dependently typed functional language, and that
   reactive programs form proofs of constructive LTL properties.
-  Types are *indexed* over time[fn:2]: $$RSet = Time \rightarrow \univ{0}, ~~ RSet \in \univ{1}$$
+  Types are indexed over time: $RSet = Time \rightarrow Set$
 
 
-- One of the inhabitant of $RSet$ is the function $Past$:
+- Types can be constant over time, but also change dynamically:
 
-
-
+  $$Past(t) = \exists $$
 
 
 
@@ -153,8 +152,6 @@ bibliographystyle:unsrt
 bibliography:biblio.bib
 
 * Footnotes
-
-[fn:2] we use $\univ{i}$ to represent the universe of types $i$.
 
 
 [fn:1] $\delta$ = Kronecker's delta

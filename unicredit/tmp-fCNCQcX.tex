@@ -1,0 +1,243 @@
+% Created 2018-01-30 Tue 16:58
+% Intended LaTeX compiler: pdflatex
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usetheme{metropolis}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{stmaryrd}
+\usepackage{fontawesome}
+\usepackage{shellesc}
+\tolerance=1000
+\usepackage{minted}
+\usepackage{ifplatform}
+\setmonofont[Scale=0.75]{FiraCode-Regular}
+\ifmacosx
+\newfontfamily\myunicodefallback{Menlo}
+\newfontfamily\myunicodefallbackb{DejaVu Sans}
+\fi
+\iflinux
+\newfontfamily\myunicodefallback{Menlo-Regular}
+\newfontfamily\myunicodefallbackb{DejaVu Sans}
+\fi
+\newcommand{\uc}[1]{{\myunicodefallbackb #1}}
+\definecolor{links}{HTML}{0086F7}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+\newcommand{\rpr}[1]{{\llbracket \texttt{#1} \rrbracket}}
+\newcommand{\rprtwo}[1]{${\llbracket \texttt{#1} \rrbracket}_2$}
+\newcommand{\rprten}[1]{${\llbracket \texttt{#1} \rrbracket}_{10}$}
+\newcommand{\rprctwo}[1]{${\llbracket \texttt{#1} \rrbracket}_{C2}$}
+\usepackage{fancyvrb}
+\usepackage{setspace}
+\usepackage{etoolbox}
+\appto\verbatim{\tiny\myunicodefallback\baselineskip=-\maxdimen\lineskip=0pt}
+\usepackage{semantic}
+\setmonofont[
+Contextuals={Alternate}, Scale=0.7,
+Scale=MatchLowercase % (LD.)
+]{Fira Code}
+\newcommand{\semc}[1]{\mathcal{C}|[#1|]}
+\newcommand{\semcd}[2]{\mathcal{C}|[#1|] & = & #2}
+\newcommand{\seme}[1]{\mathcal{E}|[#1|]}
+\newcommand{\semed}[2]{\mathcal{E}|[#1|] & = & #2}
+\newcommand{\tme}{\mathbb{N}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\envvars}{|[\Gamma|]}
+\newcommand{\describe}[2]{\underbrace{#1}_{\text{#2}}}
+\newcommand{\describeu}[2]{\overbrace{#1}^{\text{#2}}}
+\newcommand{\assetexchange}[3]{\text{#1}(#2 \rightarrow #3)}
+\newcommand{\observe}[2]{\text{Obs}(#1,#2)}
+\newcommand{\event}[1]{\text{#1}}
+\newcommand{\tconst}[1]{\langle #1 \rangle}
+\newcommand{\talways}[1]{|[ #1 |]}
+\newcommand{\ite}[4]{\text{if}~{#1}~\text{in}~{#2}~\text{then}~{#3}~\text{else}~#4}
+\usetheme{default}
+\author{Vittorio Zaccaria}
+\date{\today}
+\title{DSLs in finance, an overview}
+\let\oldhref\href
+\def\href#1#2{\oldhref{#1}{\uline{#2}}}
+\let\oldfootnote\footnote
+\renewcommand\footnote[1][]{\oldfootnote[frame,#1]}
+\setbeamerfont{caption}{size=\scriptsize}
+\hypersetup{
+ pdfauthor={Vittorio Zaccaria},
+ pdftitle={DSLs in finance, an overview},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 25.3.1 (Org mode N/A-fixup)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+
+
+
+\section{Introduction}
+\label{sec:org1d62fd9}
+\section{Contract languages}
+\label{sec:org2d0aee1}
+\begin{frame}[fragile,label={sec:org9044755}]{Certified symbolic management cite:Bahr:2015hm}
+ \begin{itemize}
+\item Contracts are expressed in relative times
+
+\item Can describe stipulation between multiple parties (\texttt{\&} operator)
+
+\item Can describe \emph{observable external decisions}:
+
+$$\ite{\describe{\observe{\event{X exercises option}}{0}}{eval'd at the beginning of each day}}{\describeu{90}{days' range}}{100*\describe{\assetexchange{DKK}{Y}{X}}{atomic exchange contract}}{0}$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orge0e1204}]{Findel cite:Biryukov:2017ip}
+\begin{itemize}
+\item Absolute times;
+
+\item Syntax similar to others but no intuitive reference to parties involved as
+contracts change over time:
+
+$$\describe{Give(10 * One(USD))}{Bob pays 10 now} \wedge \describeu{At(now+1~years, 11 * One(USD))}{Bob expects to receive 11 in a year}$$
+\end{itemize}
+\end{frame}
+
+
+
+
+\section{Semantics}
+\label{sec:org678cfc9}
+\begin{frame}[label={sec:orga71d556}]{Certified symbolic management cite:Bahr:2015hm}
+Subdivides semantics into \alert{contract} and \alert{expression} (denotational) semantics.
+Contract semantics maps expressions into a cash-flow trace:
+$$ C: \envvars \rightarrow \describeu{\tme \rightarrow \describe{Party \times Party \times Asset \rightarrow \reals}{transaction}}{trace} $$
+
+for example (note the delay \(\uparrow\) and \emph{unit transfer} \(\rightarrow\) operators)\footnote{\(\delta\) = Kronecker's delta}:
+\begin{equation}
+\begin{array}{rcl}
+\semcd{0}{\lambda n. \lambda t . 0}\\
+\semcd{c1 \& c2}{\semc{c1} + \semc{c2}} \\
+\semcd{d \uparrow c}{\lambda n. \semc{c}(n - d)} \\
+\semcd{a(p_1 \rightarrow p_2)}{\lambda n.\lambda t.\delta_{0,(p_1,p_2,a)}(n,t) - \delta_{0,(p_2,p_1,a)}(n,t)} \\
+\end{array}
+\end{equation}
+\end{frame}
+\begin{frame}[label={sec:org6027c9a}]{Certified symbolic management}
+Contract transforms consist in specialisation and advancement, i.e.,
+instantiation of a contract to a concrete starting time or simplification.
+Consider the following contract:
+  $$\assetexchange{DKK}{Y}{Z} ~\&~ \ite{\observe{\event{X defaults}}{0}}{30}{\assetexchange{DKK}{Z}{Y}}{0}$$
+
+and assume that $$default(X,i)=\top~if~i=15,~\bot~otherwise$$ Then, at time
+\(i=16\), the contract can be transformed into:
+  $$\assetexchange{DKK}{Y}{Z} ~\&~ \assetexchange{DKK}{Z}{Y} \sim 0$$
+\end{frame}
+
+
+
+\section{Software verification and certified software}
+\label{sec:orgc7e58d7}
+\section{Type systems}
+\label{sec:orgca28b0a}
+\begin{frame}[label={sec:org38dfd2d}]{Certified symbolic management}
+\begin{itemize}
+\item \alert{Problem}: Simple expressions could involve non-causality, e.g.:
+
+$$\describe{\textbf{obs}(FX(USD, DKK), 1)}{tomorrow's observation} \times \describe{DKK(X \rightarrow Y)}{pay today}$$
+
+\item \alert{Solution}: time-indexed types;
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org6e7a2ca}]{Certified symbolic management}
+\alert{Examples} of typing rules using time-indexed types:
+
+\begin{itemize}
+\item an observation at time \(t\) is available at all times \(t'\) after \(t\):
+$$\inference{t \leq t'}{\Gamma |- \textbf{Obs}(l,t) : \tau^{t'}}$$
+
+\item an expression \(e\) can only meaningfully scale a contract \(c\) if \(e\) is
+available at some time \(t'\) and \(c\) makes no stipulations strictly before
+\(t'\): $$\inference{\Gamma |- e: Real^{t'} & \Gamma |- c: Contr^{t'} & t \leq t'}{\Gamma |- e \times c:
+  Contr^t}$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orga5ba846}]{Functional Reactive programs}
+Most of the typing for financial DSLs is based on \emph{functional reactive programming}, i.e.,
+pure functions over signals. This includes loops as well.
+
+Linear-time Temporal Logic (LTL) cite:Jeffrey:2012fh, cite:Pnueli:1977wy is a
+natural extension of the type system for FRP, which constrains the temporal
+behaviour of reactive programs.
+\end{frame}
+
+\begin{frame}[label={sec:orgf5f1c97}]{Functional reactive programs}
+\begin{itemize}
+\item LTL can be defined in a dependently typed functional language, and that
+reactive programs form proofs of constructive LTL properties.
+Types are indexed over time: \(RSet = Time \rightarrow Set\)
+\end{itemize}
+
+
+\begin{itemize}
+\item Types can be constant over time, but also change dynamically:
+
+$$Past(t) = \exists s$$
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[label={sec:org48210a8}]{and temporal logic cite:Pnueli:1977wy}
+Correctness over time can be reduced to
+
+\begin{itemize}
+\item \alert{Invariance}: a property holding throughout the execution of a program
+
+\item \alert{Eventuality}: temporal implication, or a property \(Q\) eventually follows from \(P\)
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+\section{References}
+\label{sec:org6a852c8}
+\begin{frame}[label={sec:org8156773}]{Papers}
+bibliographystyle:unsrt
+bibliography:biblio.bib
+\end{frame}
+\end{document}
