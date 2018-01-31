@@ -1,4 +1,4 @@
-#+STARTUP: showall indent latexpreview entitiespretty
+#+STARTUP: showall indent entitiespretty
 
 #+TITLE: DSLs in finance, an overview
 #+LATEX_CLASS_OPTIONS: [aspectratio=169]
@@ -118,10 +118,12 @@ behaviour of reactive programs.
 
 - LTL can be defined in a dependently typed functional language, and
   reactive programs form proofs of constructive LTL properties.
-  Types are *indexed* over time[fn:2]: $$RSet = Time \rightarrow \univ{0}, ~~ RSet \in \univ{1}$$
+  Types are *indexed* over time[fn:2]: $$\describe{(Time \rightarrow \univ{0})}{reactive type} : \univ{1}$$
 
 
-- One of the inhabitants of $RSet$ is the function $Past$:
+- One of the inhabitants of the reactive type is $Past : Time \rightarrow \univ{0}$: $$Past = \lambda t.\sum_{x: Time}
+  (x \leq t) \sim \exists x (x \leq t) $$
+  Note that the expression computes a type, not a value[fn:3]!
 
 
 
@@ -154,7 +156,9 @@ bibliography:biblio.bib
 
 * Footnotes
 
-[fn:2] we use $\univ{i}$ to represent the universe of types $i$.
+[fn:3] The type can be seen as a parametric sum of singletons $\{x_1\} + \{x_2\} + \ldots \{x_t\}$.
+
+[fn:2] We use $\univ{i}$ to represent the universe of types $i$.
 
 
 [fn:1] $\delta$ = Kronecker's delta
