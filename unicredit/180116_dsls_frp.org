@@ -121,7 +121,7 @@ behaviour of reactive programs.
   Types are *indexed* over time[fn:2]: $$RSet = Time \rightarrow \univ{0}, ~~ RSet \in \univ{1}$$
 
 
-- One of the inhabitant of $RSet$ is the function $Past$:
+- One of the inhabitants of $RSet$ is the function $Past$:
 
 
 
